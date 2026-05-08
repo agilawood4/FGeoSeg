@@ -1,0 +1,40 @@
+project_name: fisheye_skyseg
+seed: 42
+num_classes: 2
+img_size: 512
+train_batch_size: 4
+val_batch_size: 4
+num_workers: 4
+mixed_precision: true
+
+data_root: ./data
+train_list: ./data/train_list.txt
+val_list: ./data/val_list.txt
+save_dir: ./checkpoints
+pseudo_dir: ./pseudo_labels
+
+teacher:
+  arch: "smp_unet_swin_tiny"
+  encoder_name: "mit_b2"
+  encoder_weights: "imagenet"
+  lr: 3.0e-4
+  epochs: 64
+
+student:
+  arch: "segformer_b0"
+  lr: 3.0e-4
+  epochs: 64
+  cps:
+    ema_decay: 0.999
+    conf_thresh_high: 0.7
+    conf_thresh_low: 0.55
+    use_pseudo_from_teacher: true
+
+rdc:
+  enable: true
+  replace_stages: [0]
+  fall_back_to_conv: true
+
+export:
+  onnx_path: ./checkpoints/segformer_b0_student.onnx
+  opset: 18

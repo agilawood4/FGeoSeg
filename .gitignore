@@ -1,0 +1,10 @@
+data/
+log/
+logs/
+pseudo_labels/
+runs_debug/
+runs_vis/
+*.data
+*.pth
+*.onnx
+*.pyc
